@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modelo.Asesor;
+import modelo.Libro;
 import utilidades.ConexionBD;
 
 public class AsesorDAOMySQL implements AsesorDAO {
@@ -101,6 +102,42 @@ public class AsesorDAOMySQL implements AsesorDAO {
 		}
 		return a;
 	}
+	@Override
+	public int insertarAsesor(Asesor asesor) {
+		Connection con = conexion.getConexion();
+		PreparedStatement consulta =null;
+		int num=0;
+		try {
+			consulta = con.prepareStatement(
+					"insert into asesores values(?,?,?,?,?,?,?,?)");
+			
+			consulta.setString(1, asesor.getDni());
+			consulta.setString(2, asesor.getApellidos());
+			consulta.setString(3, asesor.getContrato());
+			consulta.setBoolean(4, asesor.isCoche());
+			consulta.setBoolean(5, asesor.isHogar());
+			consulta.setBoolean(6, asesor.isDecesos());
+			
+			
+			num = consulta.executeUpdate();
+			System.out.println("El asesor esta insertado correctamente");
+
+		
+		} catch (SQLException e) {
+			System.out.println("Error insertando asesor");
+			e.printStackTrace();
+		} finally {
+			try {
+				consulta.close();
+				conexion.cerrarConexion();
+			} catch (SQLException e) {
+				// TODO Bloque catch generado automáticamente
+				e.printStackTrace();
+			}
+		}
+		return num;
+	}
+
 
 
 
